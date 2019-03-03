@@ -3,16 +3,13 @@ FROM maven:3.6.0-jdk-8-alpine
 
 MAINTAINER rajpk <pkrajanand@gmail.com>
 
-# RUN useradd --create-home --shell /bin/bash --gid build --uid build
+ENV USER_HOME=/home/build
 
-RUN addgroup build && \
-    adduser -D -S -h /var/cache/build -s /sbin/nologin -G build build  -u 1000
+RUN addgroup build &&\
+    adduser -D -S -h $USER_HOME -s /sbin/nologin -G build -u 1000 build
+
+RUN chown build:build $USER_HOME -R
 
 USER build
 
-RUN mkdir -p /var/cache/build/.m2
-VOLUME /var/cache/build/.m2
-WORKDIR /var/cache/build
-
-ENV USER_HOME=/var/cache/build
-ENV MAVEN_CONFIG=/enableHR/
+WORKDIR /home/build
